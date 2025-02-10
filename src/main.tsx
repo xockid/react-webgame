@@ -5,6 +5,8 @@ import App from '@/App';
 import Main from '@/pages/Main';
 import Game from '@/pages/Game';
 import NotFound from '@/pages/NotFound';
+import Profile from '@/pages/Profile';
+import Login from './pages/Login';
 
 const router = createBrowserRouter([
   {
@@ -13,8 +15,11 @@ const router = createBrowserRouter([
     errorElement: <NotFound />,
     children: [
       { index: true, path: '/', element: <Main /> },
+      { path: '/login', element: <Login /> },
+      { path: '/login/:id', element: <Login /> },
       { path: '/game', element: <Game /> },
       { path: '/game/:id', element: <Game /> },
+      { path: '/profile', element: <Profile /> },
     ],
   },
 ]);
