@@ -3,7 +3,9 @@ import Header from "@/components/common/Header";
 import styles from "@/assets/styles/common.module.scss";
 import { AuthContextProvider } from "@/contexts/AuthContext";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import 'toastr/build/toastr.min.css';
+import toastr from 'toastr';
 
 const queryClient = new QueryClient({
     defaultOptions: {
@@ -15,6 +17,11 @@ const queryClient = new QueryClient({
         },
     },
 });
+
+toastr.options = {
+    timeOut: 2000,
+    positionClass: "toast-bottom-center",
+};
 
 function App() {
     return (
