@@ -1,14 +1,46 @@
+$transition-duration: 0.2s;
+
 .wrapper {
     .container {
         padding: 30px;
     }
 }
 
-@media screen and (max-width: 768px) {
-    .wrapper {
-        .container {
-        padding: 20px;
-        }
+.commonBtnStyle {
+    border: 0;
+    display: block;
+    padding: 10px;
+    background-color: #000;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color $transition-duration;
+}
+
+.commonBtn {
+    display: flex;
+    justify-content: center;
+    gap: 5px;
+    a,
+    button {
+        @extend .commonBtnStyle;
     }
 }
 
+.commonInput {
+    padding: 5px;
+    width: 100%;
+    border: 1px solid #dedede;
+    border-radius: 3px;
+    margin-top: 5px;
+    font-size: 14px;
+}
+
+@media screen and (max-width: 768px) {
+    .wrapper {
+        .container {
+            padding: 20px;
+        }
+    }
+}

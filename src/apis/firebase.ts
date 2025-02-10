@@ -204,3 +204,9 @@ export function onUserStateChange(callback: (user: User | null) => void): void {
         callback(user);
     });
 }
+
+export function fetchUser(): Promise<User | null> {
+    return new Promise((resolve) => {
+        onUserStateChange((user) => resolve(user));
+    });
+}

@@ -9,16 +9,22 @@ import styles from "./Login.module.scss";
 function Login() {
     const { id } = useParams<{ id?: string }>();
     const navigate = useNavigate();
-    const { socialLogin, login, signup } = useAuthContext();
+    const { socialLogin, login, signup, user, isLoading } = useAuthContext();
     const [authType, setAuthType] = useState<AuthType>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
 
-    useEffect(() => {
+    useEffect(() => { //미로그인 시 로그인페이지로
         if (id == undefined) {
             navigate("/login/social");
         }
     }, [id]);
+
+    useEffect(() => { //로그인 시 메인으로
+        if (!isLoading && user) {
+            navigate('/');
+        }
+    }, [user, isLoading]);
 
     useEffect(() => {
         setEmail("");
@@ -83,6 +89,9 @@ function Login() {
                             </button>
                             <button onClick={handleSocialLogin("github")}>
                                 깃헙 로그인/회원가입
+                            </button>
+                            <button onClick={socialLogin("facebook")}>
+                                페이스북 로그인/회원가입
                             </button>
                         </div>
                     </div>
