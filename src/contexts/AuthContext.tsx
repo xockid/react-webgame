@@ -1,39 +1,26 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import {
     socialLogin,
     login,
     logout,
+    onUserStateChange,
     signup,
-    fetchUser,
 } from "@apis/firebase";
-import { useQuery } from "@tanstack/react-query";
 
 const AuthContext = createContext(null);
 
 export function AuthContextProvider({ children }) {
-    // const [user, setUser] = useState<any>();
-    const {
-        data: isUser,
-        isLoading,
-        isError,
-    } = useQuery({
-        queryKey: ['user', 'me'],
-        queryFn: fetchUser,
-        staleTime: 300 * 1000, // 기본 설정은 0 (fresh -> stale)
-        gcTime: 300 * 1000, // 기본 값이 300 * 1000, 5분임
-    });
+    const [user, setUser] = useState<any>();
 
-    // useEffect(() => {
-    //     onUserStateChange((user) => setUser(user));
-    // }, []);
+    useEffect(() => {
+        onUserStateChange((user) => setUser(user));
+    }, []);
 
     return (
         <AuthContext.Provider
             value={{
-                user: isUser,
-                uid: isUser && isUser.uid,
-                isLoading,
-                isError,
+                user,
+                uid: user && user.uid,
                 socialLogin,
                 login,
                 logout,

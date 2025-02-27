@@ -9,7 +9,7 @@ import styles from "./Login.module.scss";
 function Login() {
     const { id } = useParams<{ id?: string }>();
     const navigate = useNavigate();
-    const { socialLogin, login, signup, user, isLoading } = useAuthContext();
+    const { socialLogin, login, signup } = useAuthContext();
     const [authType, setAuthType] = useState<AuthType>("");
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
@@ -19,12 +19,6 @@ function Login() {
             navigate("/login/social");
         }
     }, [id]);
-
-    useEffect(() => { //로그인 시 메인으로
-        if (!isLoading && user) {
-            navigate('/');
-        }
-    }, [user, isLoading]);
 
     useEffect(() => {
         setEmail("");

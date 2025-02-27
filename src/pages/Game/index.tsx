@@ -67,7 +67,7 @@ function Game() {
 
     return (
         <>
-            <h1>{GameTitle(id)}</h1>
+            <h2>{GameTitle(id)}</h2>
             {GameMatcher(id)}
             <div className={commonStyles.commonBtn}>
                 <Link to="/">메인으로 가기</Link>
