@@ -5,12 +5,15 @@ import { useAuthContext } from "@/contexts/AuthContext";
 import commonStyles from "@/assets/styles/common.module.scss";
 import styles from "./Profile.module.scss";
 import Loading from "@/components/ui/Loading";
-import { removeUser } from "@/apis/firebase";
 import Modal from "@/components/ui/Modal";
+import { useQueryClient } from "@tanstack/react-query";
+import cx from 'classnames';
+import { getProvider } from "@/utils";
 
 function Profile() {
+    const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const { user, isLoading } = useAuthContext();
+    const { user, isLoading, removeUser } = useAuthContext();
     const [showModal, setShowModal] = useState(false);
     const [password, setPassword] = useState("");
 
@@ -25,28 +28,33 @@ function Profile() {
     }
 
     const handleRemoveUser = async () => {
-        if (!user) return;
-
-        //일반 인증 유저 탈퇴 시 모달 띄우기
-        const providerId = user.providerData[0]?.providerId;
-        if (providerId === "password") {
-            setShowModal(true);
-        } else {
-            try {
-                await removeUser();
-                navigate("/login");
-            } catch (error) {
-                console.error("회원 탈퇴 에러:", error);
+        try {
+            if (user?.providerData[0]?.providerId === "password") {
+                setShowModal(true);
+                return;
             }
+
+            await removeUser();
+            navigate("/login");
+            queryClient.invalidateQueries({
+                queryKey: ["user", "me"],
+            });
+        } catch (error) {
+            console.error("회원 탈퇴 에러:", error);
         }
     };
 
-    const handleConfirmRemove = async () => {
-        if (!user || !password) return;
-
+    const handleSubmit = async () => {
         try {
-            await removeUser(user.email!, password);
-            navigate("/login");
+            const result = await removeUser(user?.email, password);
+
+            if (result === true) {
+                setShowModal(false);
+                navigate("/login");
+                queryClient.invalidateQueries({
+                    queryKey: ["user", "me"],
+                });
+            }
         } catch (error) {
             console.error("회원 탈퇴 에러:", error);
         }
@@ -57,6 +65,14 @@ function Profile() {
             <div className={styles.page}>
                 <div className={styles.page__profile}>
                     <ul className={styles.page__profile__info}>
+                        <li>
+                            <span className={styles.label}>
+                                로그인 제공업체
+                            </span>
+                            <span className={styles.value}>
+                                {getProvider(user?.providerData[0]?.providerId)}
+                            </span>
+                        </li>
                         <li>
                             <span className={styles.label}>이메일</span>
                             <span className={styles.value}>{user?.email}</span>
@@ -87,7 +103,12 @@ function Profile() {
                 </div>
             </div>
             <div className={commonStyles.commonBtn}>
-                <button className={commonStyles.commonBtnStyle} onClick={handleRemoveUser}>회원탈퇴</button>
+                <button
+                    className={commonStyles.commonBtnStyle}
+                    onClick={handleRemoveUser}
+                >
+                    회원탈퇴
+                </button>
             </div>
 
             {/* 모달 */}
@@ -96,17 +117,20 @@ function Profile() {
                     title="비밀번호 확인"
                     content={
                         <div>
-                            <p>비밀번호를 입력해주세요.</p>
+                            <p>회원 탈퇴를 위해 비밀번호를 입력해주세요.</p>
                             <input
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
+                                placeholder="비밀번호"
                                 className={commonStyles.commonInput}
                             />
-                            <div className={`${commonStyles.commonBtn} ${styles.modalBtn}`}>
+                            <div
+                                className={cx(commonStyles.commonBtn, styles.modalBtn) }
+                            >
                                 <button
                                     className={commonStyles.commonBtnStyle}
-                                    onClick={handleConfirmRemove}
+                                    onClick={handleSubmit}
                                 >
                                     확인
                                 </button>

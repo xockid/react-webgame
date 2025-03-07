@@ -5,6 +5,7 @@ import {
     logout,
     signup,
     fetchUser,
+    removeUser,
 } from "@apis/firebase";
 import { useQuery } from "@tanstack/react-query";
 
@@ -38,6 +39,7 @@ export function AuthContextProvider({ children }) {
                 login,
                 logout,
                 signup,
+                removeUser
             }}
         >
             {children}

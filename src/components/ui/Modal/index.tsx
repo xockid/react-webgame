@@ -1,9 +1,9 @@
-import React from "react";
+import { ReactNode } from "react";
 import styles from "./Modal.module.scss";
 
 type Props = {
     title: string;
-    content: React.ReactNode;
+    content: ReactNode;
 };
 
 export default function Modal({ title, content }: Props) {

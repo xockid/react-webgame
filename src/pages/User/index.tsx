@@ -1,42 +1,32 @@
-import { database } from "@/apis/firebase";
+import { getUser } from "@/apis/firebase";
 import dayjs from "dayjs";
-import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styles from "./User.module.scss";
+import Loading from "@/components/ui/Loading";
 
 function User() {
     const { uid } = useParams<{ uid: string }>();
-    const [userData, setUserData] = useState<any>(null);
-    const [error, setError] = useState<string | null>(null);
+    const [user, setUser] = useState<any>(null);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
-        if (uid) {
-            const fetchUserData = async () => {
-                try {
-                    const userDocRef = doc(database, "users", uid);
-                    const userDocSnap = await getDoc(userDocRef);
-
-                    if (userDocSnap.exists()) {
-                        setUserData(userDocSnap.data());
-                    } else {
-                        setError("유저 정보를 찾을 수 없습니다.");
-                    }
-                } catch (error) {
-                    console.error(
-                        "유저 정보를 불러오는 데 실패했습니다.",
-                        error
-                    );
-                    setError("유저 정보를 불러오는 데 실패했습니다.");
-                }
-            };
-
-            fetchUserData();
-        }
+        const fetchUser = async () => {
+            setLoading(true);
+            try {
+                const isUser = await getUser(uid);
+                setUser(isUser);
+            } catch (error) {
+                console.log(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchUser();
     }, [uid]);
 
-    if (error) {
-        return <div>{error}</div>;
+    if (loading) {
+        return <Loading />;
     }
 
     return (
@@ -44,18 +34,18 @@ function User() {
             <ul className={styles.user__info}>
                 <li>
                     <span className={styles.label}>이메일</span>
-                    <span className={styles.value}>{userData?.email}</span>
+                    <span className={styles.value}>{user?.email}</span>
                 </li>
                 <li>
                     <span className={styles.label}>닉네임</span>
                     <span className={styles.value}>
-                        {userData?.displayName || "이름 없음"}
+                        {user?.displayName || "이름 없음"}
                     </span>
                 </li>
                 <li>
                     <span className={styles.label}>생성일</span>
                     <span className={styles.value}>
-                        {dayjs(userData?.createdAt).format(
+                        {dayjs(user?.createdAt).format(
                             "YYYY년 MM월 DD일 A HH시 mm분"
                         )}
                     </span>
@@ -63,7 +53,7 @@ function User() {
                 <li>
                     <span className={styles.label}>마지막 접속일</span>
                     <span className={styles.value}>
-                        {dayjs(userData?.lastLogin).format(
+                        {dayjs(user?.lastLogin).format(
                             "YYYY년 MM월 DD일 A HH시 mm분"
                         )}
                     </span>
