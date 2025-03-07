@@ -14,11 +14,14 @@ import {
     updateProfile,
     EmailAuthProvider,
     reauthenticateWithCredential,
+    deleteUser,
 } from "firebase/auth";
 import {
+    collection,
     deleteDoc,
     doc,
     getDoc,
+    getDocs,
     getFirestore,
     setDoc,
 } from "firebase/firestore";
@@ -35,7 +38,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
-const database = getFirestore(app);
+export const database = getFirestore(app);
 
 export const socialLogin =
     (type: SocialProvider) => async (): Promise<User | null> => {
@@ -330,7 +333,7 @@ export async function removeUser(
         const userDocRef = doc(database, "users", user.uid);
         await deleteDoc(userDocRef);
 
-        await user.delete();
+        await deleteUser(auth.currentUser);
 
         toastr.success("회원 탈퇴가 완료되었습니다.");
     } catch (error) {
@@ -350,3 +353,21 @@ export async function removeUser(
 }
 
 // 유저 목록 불러오기
+export async function getUsers() {
+    try {
+        const UsersCollection = collection(database, "users");
+        const snapshot = await getDocs(UsersCollection);
+        const users = snapshot.docs.map((doc) => ({
+            uid: doc.id,
+            ...doc.data(),
+        }));
+
+        return users;
+    } catch (error) {
+        console.error("유저 목록을 불러오는 중 오류 발생:", error);
+        toastr.error("유저 목록을 불러오는 중 오류가 발생했습니다.");
+        return [];
+    }
+}
+
+// 사용 방법 getUsers().then(users => console.log(users));

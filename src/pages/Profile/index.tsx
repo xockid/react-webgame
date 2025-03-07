@@ -86,8 +86,8 @@ function Profile() {
                     </ul>
                 </div>
             </div>
-            <div>
-                <button onClick={handleRemoveUser}>회원탈퇴</button>
+            <div className={commonStyles.commonBtn}>
+                <button className={commonStyles.commonBtnStyle} onClick={handleRemoveUser}>회원탈퇴</button>
             </div>
 
             {/* 모달 */}
