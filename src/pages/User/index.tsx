@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import styles from "./User.module.scss";
 
 function User() {
     const { uid } = useParams<{ uid: string }>();
@@ -39,21 +40,35 @@ function User() {
     }
 
     return (
-        <div>
-            <p>이메일: {userData?.email}</p>
-            <p>닉네임: {userData?.displayName || "이름 없음"}</p>
-            <p>
-                생성일:{" "}
-                {dayjs(userData?.createdAt).format(
-                    "YYYY년 MM월 DD일 A HH시 mm분"
-                )}
-            </p>
-            <p>
-                마지막 접속일:{" "}
-                {dayjs(userData?.lastLogin).format(
-                    "YYYY년 MM월 DD일 A HH시 mm분"
-                )}
-            </p>
+        <div className={styles.user}>
+            <ul className={styles.user__info}>
+                <li>
+                    <span className={styles.label}>이메일</span>
+                    <span className={styles.value}>{userData?.email}</span>
+                </li>
+                <li>
+                    <span className={styles.label}>닉네임</span>
+                    <span className={styles.value}>
+                        {userData?.displayName || "이름 없음"}
+                    </span>
+                </li>
+                <li>
+                    <span className={styles.label}>생성일</span>
+                    <span className={styles.value}>
+                        {dayjs(userData?.createdAt).format(
+                            "YYYY년 MM월 DD일 A HH시 mm분"
+                        )}
+                    </span>
+                </li>
+                <li>
+                    <span className={styles.label}>마지막 접속일</span>
+                    <span className={styles.value}>
+                        {dayjs(userData?.lastLogin).format(
+                            "YYYY년 MM월 DD일 A HH시 mm분"
+                        )}
+                    </span>
+                </li>
+            </ul>
         </div>
     );
 }
