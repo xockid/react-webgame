@@ -1,11 +1,10 @@
+@use "@/assets/styles/main.scss" as *;
+
 .page {
     &__message {
         font-size: 16px;
         font-weight: bold;
         text-align: center;
-    }
-    &__title {
-        margin-top: 30px;
     }
     &__wrapper {
         display: flex;
@@ -15,18 +14,9 @@
     }
     &__content {
         width: calc(50% - 15px);
-        bottom: 1px solid #eee;
-        padding: 20px;
-        border-radius: 4px;
-        box-shadow: 0 4px 8px #0000001a;
+        @include boxStyle;
     }
     &__list {
-        margin-top: 20px;
-        li {
-            margin-top: 5px;
-            &:first-child {
-                margin-top: 0;
-            }
-        }
+        @include listStyle;
     }
 }

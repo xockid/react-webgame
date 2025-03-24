@@ -1,6 +1,6 @@
 import { getUsers, IUser } from "@/apis/firebase";
 import { useEffect, useState } from "react";
-import styles from "./UsersList.module.scss";
+import styles from "@/pages/Main/Main.module.scss";
 import { Link } from "react-router-dom";
 import Loading from "@/components/ui/Loading";
 
@@ -28,7 +28,7 @@ export default function UsersList() {
     }
 
     return (
-        <ul className={styles.usersList}>
+        <ul className={styles.page__list}>
             {users.map((user) => (
                 <li key={user.id}>
                     <Link to={`/user/${user.id}`}>
