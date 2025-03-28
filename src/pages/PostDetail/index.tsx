@@ -6,6 +6,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import commonStyles from "@/assets/styles/common.module.scss";
 import styles from "./PostDetail.module.scss";
 import { formatDate, formatTextWithLine } from "@/utils";
+import toastr from "toastr";
 
 function PostDetail() {
     const { user } = useAuthContext();
@@ -61,7 +62,7 @@ function PostDetail() {
                     {formatDate(post.createdAt.seconds, ".")}
                 </p>
                 <div className={commonStyles.commonBtn}>
-                    <button onClick={() => navigate("/")}>목록</button>
+                    <button onClick={() => navigate("/postlist")}>목록</button>
                     {user && user.uid === post.author && (
                         <>
                             <button

@@ -31,6 +31,7 @@ export default function Header() {
                         <Link to="/profile">
                             {user.displayName ?? "방문자"}님 반갑습니다.
                         </Link>
+                        <Link to="/post/write">글쓰기</Link>
                         <button onClick={handleLogout}>로그아웃</button>
                     </>
                 ) : (

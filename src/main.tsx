@@ -11,6 +11,7 @@ import User from "@/pages/User";
 import PostDetail from "@/pages/PostDetail";
 import PostWrite from "@/pages/PostWrite";
 import PostEdit from "@/pages/PostEdit";
+import PostList from "@/pages/PostList";
 
 const router = createBrowserRouter([
     {
@@ -28,7 +29,7 @@ const router = createBrowserRouter([
             { path: "/post/:postId", element: <PostDetail /> },
             { path: "/post/write", element: <PostWrite /> },
             { path: "/post/edit/:postId", element: <PostEdit /> },
-
+            { path: "/postlist", element: <PostList /> },
         ],
     },
 ]);
